@@ -17,21 +17,36 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useRegisterMutation } from "@/redux/features/auth/auth.api";
+import { toast } from "sonner";
 
 //Schema define here
-
 // eslint-disable-next-line react-refresh/only-export-components
 export const registerSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters" ),
+  name: z.string().min(3, "Name must be at least 3 characters"),
   email: z.string(),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["user", "admin", "staff"]),
 });
 
 const RegistrationForm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSubmit = (data: z.infer<typeof registerSchema>) => {
-    console.log(data);
+  const [register] = useRegisterMutation();
+
+  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    const userInfo = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      role: data.role,
+    };
+
+    try {
+      const result = await register(userInfo).unwrap();
+      console.log(result);
+      toast.success("User created successfully!")
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const form = useForm<z.infer<typeof registerSchema>>({
@@ -40,7 +55,7 @@ const RegistrationForm = () => {
       name: "",
       email: "",
       password: "",
-      role: "user",
+      role: "admin",
     },
   });
 
@@ -85,6 +100,7 @@ const RegistrationForm = () => {
                     <Input
                       {...field}
                       id="reg-email"
+                      type="email"
                       // aria-invalid={fieldState.invalid}
                       placeholder="Type Name"
                       autoComplete="off"
@@ -95,18 +111,17 @@ const RegistrationForm = () => {
                   </Field>
                 )}
               />
-
+              {/* password field */}
               <Controller
                 name="password"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="reg-pass">
-                      Enter Password
-                    </FieldLabel>
+                    <FieldLabel htmlFor="reg-pass">Enter Password</FieldLabel>
                     <Input
                       {...field}
                       id="reg-pass"
+                      type="password"
                       // aria-invalid={fieldState.invalid}
                       placeholder="Type Password"
                       autoComplete="off"
@@ -117,14 +132,13 @@ const RegistrationForm = () => {
                   </Field>
                 )}
               />
+              {/* role input */}
               <Controller
                 name="role"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="reg-role">
-                      Enter Role
-                    </FieldLabel>
+                    <FieldLabel htmlFor="reg-role">Enter Role</FieldLabel>
                     <Input
                       {...field}
                       id="reg-role"
@@ -141,6 +155,7 @@ const RegistrationForm = () => {
             </FieldGroup>
           </form>
         </CardContent>
+
         <CardFooter>
           <Field orientation="horizontal">
             <Button
