@@ -1,7 +1,20 @@
+import {
+  FileTextIcon,
+  GlobeIcon,
+  HomeIcon,
+  LayersIcon,
+  UsersIcon,
+} from "lucide-react";
+import { useId } from "react";
+
+import Logo from "@/components/navbar-components/logo";
+import ThemeToggle from "@/components/navbar-components/theme-toggle";
+import UserMenu from "@/components/navbar-components/user-menu";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import {
@@ -9,11 +22,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ModeToggle } from "./ModeToggler";
-import {
-  GlobeIcon,
-} from "lucide-react";
-
 import {
   Select,
   SelectContent,
@@ -21,31 +29,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useId } from "react";
-import { Link } from "react-router";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-
-// Navigation links array to be used in both desktop and mobile menus
+// Navigation links with icons for desktop icon-only navigation
 const navigationLinks = [
-  {href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/fund", label: "Fund" },
-  { href: "/project", label: "Project" },
-  { href: "/contact", label: "Contact" },
+  { active: true, href: "#", icon: HomeIcon, label: "Dashboard" },
+  { href: "#", icon: LayersIcon, label: "Projects" },
+  { href: "#", icon: FileTextIcon, label: "Documentation" },
+  { href: "#", icon: UsersIcon, label: "Team" },
 ];
+
 // Language options
 const languages = [
-  { label: "EN", value: "en" },
-  { label: "BN", value: "bn" },
+  { label: "En", value: "en" },
+  { label: "Es", value: "es" },
+  { label: "Fr", value: "fr" },
+  { label: "De", value: "de" },
+  { label: "Ja", value: "ja" },
 ];
 
 export default function Component() {
   const id = useId();
+
   return (
     <header className="border-b px-4 md:px-6">
-      <div className="flex h-16 items-center justify-between gap-4 w-11/12 mx-auto">
+      <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-1 items-center gap-2">
           {/* Mobile menu trigger */}
           <Popover>
             <PopoverTrigger asChild>
@@ -84,76 +99,68 @@ export default function Component() {
             <PopoverContent align="start" className="w-36 p-1 md:hidden">
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {navigationLinks.map((link) => (
-                    <NavigationMenuItem className="w-full" key={link.label}>
-                      <Link
-                        className="py-1.5"
-                        to={link.href}
-                      >
-                        {link.label}
-                      </Link>
-                    </NavigationMenuItem>
-                  ))}
+                  {navigationLinks.map((link, _index) => {
+                    const Icon = link.icon;
+                    return (
+                      <NavigationMenuItem className="w-full" key={link.label}>
+                        <NavigationMenuLink
+                          active={link.active}
+                          className="flex-row items-center gap-2 py-1.5"
+                          href={link.href}
+                        >
+                          <Icon
+                            aria-hidden="true"
+                            className="text-muted-foreground"
+                            size={16}
+                          />
+                          <span>{link.label}</span>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    );
+                  })}
                 </NavigationMenuList>
               </NavigationMenu>
             </PopoverContent>
           </Popover>
-          {/* Main nav */}
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-primary hover:text-primary/90">
-              <svg
-                id="logo-15"
-                width="40"
-                height="40"
-                viewBox="0 0 49 48"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {" "}
-                <path
-                  d="M24.5 12.75C24.5 18.9632 19.4632 24 13.25 24H2V12.75C2 6.53679 7.03679 1.5 13.25 1.5C19.4632 1.5 24.5 6.53679 24.5 12.75Z"
-                  className="custom"
-                  fill="#17CF97"
-                ></path>{" "}
-                <path
-                  d="M24.5 35.25C24.5 29.0368 29.5368 24 35.75 24H47V35.25C47 41.4632 41.9632 46.5 35.75 46.5C29.5368 46.5 24.5 41.4632 24.5 35.25Z"
-                  className="custom"
-                  fill="#17CF97"
-                ></path>{" "}
-                <path
-                  d="M2 35.25C2 41.4632 7.03679 46.5 13.25 46.5H24.5V35.25C24.5 29.0368 19.4632 24 13.25 24C7.03679 24 2 29.0368 2 35.25Z"
-                  className="custom"
-                  fill="#17CF97"
-                ></path>{" "}
-                <path
-                  d="M47 12.75C47 6.53679 41.9632 1.5 35.75 1.5H24.5V12.75C24.5 18.9632 29.5368 24 35.75 24C41.9632 24 47 18.9632 47 12.75Z"
-                  className="custom"
-                  fill="#17CF97"
-                ></path>{" "}
-              </svg>
-            </Link>
-            {/* Navigation menu */}
-            <NavigationMenu className="max-md:hidden">
+            {/* Logo */}
+            <a className="text-primary hover:text-primary/90" href="#">
+              <Logo />
+            </a>
+            {/* Desktop navigation - icon only */}
+            <NavigationMenu className="hidden md:flex">
               <NavigationMenuList className="gap-2">
-                {navigationLinks.map((link) => (
-                  <NavigationMenuItem key={link.label}>
-                    <Link
-                      className="py-1.5 font-medium text-muted-foreground hover:text-primary"
-                      to={link.href}
-                    >
-                      {link.label}
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
+                <TooltipProvider>
+                  {navigationLinks.map((link) => (
+                    <NavigationMenuItem key={link.label}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <NavigationMenuLink
+                            className="flex size-8 items-center justify-center p-1.5"
+                            href={link.href}
+                          >
+                            <link.icon aria-hidden="true" size={20} />
+                            <span className="sr-only">{link.label}</span>
+                          </NavigationMenuLink>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          className="px-2 py-1 text-xs"
+                          side="bottom"
+                        >
+                          <p>{link.label}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </NavigationMenuItem>
+                  ))}
+                </TooltipProvider>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2">
           {/* Theme toggle */}
-          <ModeToggle/>
+          <ThemeToggle />
           {/* Language selector */}
           <Select defaultValue="en">
             <SelectTrigger
@@ -174,14 +181,9 @@ export default function Component() {
               ))}
             </SelectContent>
           </Select>
-          <Button asChild className="text-sm" size="sm" variant="ghost">
-            <Link to="login">Sign In</Link>
-          </Button>
-          <Button asChild className="text-sm" size="sm">
-            <Link to="/donate">Donate</Link>
-          </Button>
+          {/* User menu */}
+          <UserMenu />
         </div>
-      </div>
       </div>
     </header>
   );
