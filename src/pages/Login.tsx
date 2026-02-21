@@ -1,23 +1,19 @@
-import { useState } from "react";
-
-interface IForm {
-    email: string;
-    password: string
-}
-
-const initialFormState : IForm = {
-    email: "",
-    password: "",
+import Lottie from "lottie-react";
+import loginData from "../assets/json/login.json";
+import LoginForm from "@/components/modules/Authentication/LoginForm";
+const Login = () => {
+  return (
+    <div>
+      <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 gap-2 items-center">
+        <div>
+          <Lottie animationData={loginData} loop={true} />
+        </div>
+        <div>
+          <LoginForm />
+        </div>
+      </div>
+    </div>
+  );
 };
 
-const LoginForm = () => {
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [formData, setFormData] = useState(initialFormState);
-    console.log(formData)
-
-
-  return <div>this is login form</div>;
-};
-
-export default LoginForm;
+export default Login;

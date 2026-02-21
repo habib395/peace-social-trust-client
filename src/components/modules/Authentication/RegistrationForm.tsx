@@ -19,6 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import { toast } from "sonner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useNavigate } from "react-router";
 
 //Schema define here
 // eslint-disable-next-line react-refresh/only-export-components
@@ -26,13 +28,26 @@ export const registerSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
   email: z.string(),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["user", "admin", "staff"]),
+  role: z.enum(["admin", "staff"]),
 });
 
 const RegistrationForm = () => {
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
+
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "staff",
+    },
+  });
 
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    const toastId = toast.loading("Creating account...");
+
     const userInfo = {
       name: data.name,
       email: data.email,
@@ -41,36 +56,40 @@ const RegistrationForm = () => {
     };
 
     try {
-      const result = await register(userInfo).unwrap();
-      console.log(result);
-      toast.success("User created successfully!")
-    } catch (error) {
-      console.error(error);
+      const res = await register(userInfo).unwrap();
+      toast.success("Register successfully!");
+      form.reset();
+
+      if(res.user.role === "admin"){
+        navigate("/admin")
+      }else if(res.user.role === "staff"){
+        navigate("/staff")
+      }else{
+        navigate("/")
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error);
+      console.error(error?.data?.message || "Registration failed", {
+        id: toastId,
+      });
     }
   };
 
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      role: "admin",
-    },
-  });
-
   return (
-    <div>
+    <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full sm:max-w-md">
         <CardHeader>
-          <CardTitle>Register Now</CardTitle>
+          <CardTitle className="text-2xl">Register Now</CardTitle>
           <CardDescription>
-            Help us improve by reporting bugs you encounter.
+            Choose your role carefully to access the dashboard.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+          <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
+              {/* name field */}
               <Controller
                 name="name"
                 control={form.control}
@@ -136,37 +155,36 @@ const RegistrationForm = () => {
               <Controller
                 name="role"
                 control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="reg-role">Enter Role</FieldLabel>
-                    <Input
-                      {...field}
-                      id="reg-role"
-                      // aria-invalid={fieldState.invalid}
-                      placeholder="Select Role"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FieldLabel htmlFor="reg-role">Select Role</FieldLabel>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                    <SelectItem value="admin">Admin</SelectItem>
+                    <SelectItem value="staff">Staff</SelectItem>
+                    </SelectContent>
+
+                  </Select>
                 )}
               />
             </FieldGroup>
           </form>
         </CardContent>
 
-        <CardFooter>
+        <CardFooter className="flex flex-col gap-2">
           <Field orientation="horizontal">
             <Button
               type="button"
               variant="outline"
               onClick={() => form.reset()}
+              disabled={isLoading}
             >
               Reset
             </Button>
-            <Button type="submit" form="form-rhf-demo">
-              Submit
+            <Button type="submit" form="register-form">
+              {isLoading ? "Processing..." : "Create Account"}
             </Button>
           </Field>
         </CardFooter>
