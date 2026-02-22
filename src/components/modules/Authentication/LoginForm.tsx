@@ -17,7 +17,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const loginSchema = z.object({
@@ -25,20 +27,49 @@ export const loginSchema = z.object({
   password: z.string().min(6, "Password is required"),
 });
 const LoginForm = () => {
-  const form = useForm<z.infer<typeof loginSchema>>({
+
+const navigate = useNavigate();
+
+const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
-  });
-  
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
-    console.log(data)
-  }
+});
+
+  //RTK Query mutation hook
+  const [loginUser, { isLoading }] = useLoginMutation();
+
+  const onSubmit = async(data: z.infer<typeof loginSchema>) => {
+    const toastId = toast.loading("Creating login...");
+    const userInfo = {
+        email: data.email,
+        password: data.password,
+    }
+    try {
+        const res = await loginUser(userInfo).unwrap();
+        toast.success("Login successfully!");
+        form.reset();
+
+        if(res.user.role === "admin"){
+            navigate("/admin")
+        }else if(res.user.role === "staff"){
+            navigate("/staff")
+        }else{
+            navigate("/")
+        }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+        toast.error(error);
+        console.error(error?.data?.message || "Login failed", {
+           toastId,
+        })
+    }
+  };
 
   return (
-    <div>
+    <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full sm:max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Login Now</CardTitle>
@@ -47,7 +78,6 @@ const LoginForm = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* <form id="register-form" onSubmit={form.handleSubmit(onSubmit)}> */}
           <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               {/* email field */}
@@ -102,13 +132,13 @@ const LoginForm = () => {
               type="button"
               variant="outline"
               onClick={() => form.reset()}
-            //   disabled={isLoading}
+              //   disabled={isLoading}
             >
               Reset
             </Button>
             <Button type="submit" form="login-form">
-              {/* {isLoading ? "Processing..." : "Create Account"} */}
-              login
+              {isLoading ? "Processing..." : "Login"}
+            
             </Button>
           </Field>
         </CardFooter>
