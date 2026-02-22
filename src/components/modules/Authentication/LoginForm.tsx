@@ -42,7 +42,6 @@ const form = useForm<z.infer<typeof loginSchema>>({
   const [loginUser, { isLoading }] = useLoginMutation();
 
   const onSubmit = async(data: z.infer<typeof loginSchema>) => {
-    const toastId = toast.loading("Creating login...");
     const userInfo = {
         email: data.email,
         password: data.password,
@@ -63,7 +62,6 @@ const form = useForm<z.infer<typeof loginSchema>>({
     } catch (error: any) {
         toast.error(error);
         console.error(error?.data?.message || "Login failed", {
-           toastId,
         })
     }
   };

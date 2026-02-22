@@ -46,7 +46,6 @@ const RegistrationForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
-    const toastId = toast.loading("Creating account...");
 
     const userInfo = {
       name: data.name,
@@ -71,9 +70,7 @@ const RegistrationForm = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error);
-      console.error(error?.data?.message || "Registration failed", {
-        id: toastId,
-      });
+      console.error(error?.data?.message || "Registration failed");
     }
   };
 
