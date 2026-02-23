@@ -19,7 +19,7 @@ const useUser = () : [User | null, boolean] => {
                 const currentUser: User | null = userDate ? JSON.parse(userDate) : null;
 
                 if(currentUser && currentUser.role) {
-                    setUser(null);
+                    setUser(currentUser);
                 }
             } catch (error) {
                 console.error("Error assessing localStorage:", error);

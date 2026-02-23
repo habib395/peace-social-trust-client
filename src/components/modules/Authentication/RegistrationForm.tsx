@@ -56,6 +56,7 @@ const RegistrationForm = () => {
 
     try {
       const res = await register(userInfo).unwrap();
+      console.log(res)
       toast.success("Register successfully!");
       form.reset();
 

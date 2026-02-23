@@ -48,6 +48,9 @@ const form = useForm<z.infer<typeof loginSchema>>({
     }
     try {
         const res = await loginUser(userInfo).unwrap();
+        console.log(res)
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("user", JSON.stringify(res.user));
         toast.success("Login successfully!");
         form.reset();
 
@@ -67,11 +70,11 @@ const form = useForm<z.infer<typeof loginSchema>>({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
+    <div className="flex items-center justify-center sm:min-h-screen p-4">
       <Card className="w-full sm:max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Login Now</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl text-center">Login Now</CardTitle>
+          <CardDescription className="text-center">
             Give data carefully to access the dashboard.
           </CardDescription>
         </CardHeader>
@@ -136,7 +139,6 @@ const form = useForm<z.infer<typeof loginSchema>>({
             </Button>
             <Button type="submit" form="login-form">
               {isLoading ? "Processing..." : "Login"}
-            
             </Button>
           </Field>
         </CardFooter>

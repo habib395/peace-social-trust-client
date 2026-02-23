@@ -1,4 +1,3 @@
-import { Contact } from "lucide-react";
 import { createBrowserRouter } from "react-router";
 import App from "@/App";
 import About from "@/pages/About";
@@ -8,45 +7,54 @@ import Project from "@/pages/Project";
 import Register from "@/pages/Registration";
 import AdminDashboard from "@/components/layout/AdminDashboard";
 import StaffDashboard from "@/components/layout/StaffDashboard";
+import Contact from "@/pages/Contact";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
-    {
-        Component: App,
-        path: "/",
-        children: [
-            {
-                Component: About,
-                path: "about"
-            },
-            {
-                Component: Fund,
-                path: "fund"
-            },
-            {
-                Component: Project,
-                path: "project"
-            },
-            {
-                Component: Contact,
-                path: "contact"
-            }
-        ]
-    },
-    {
-        Component: AdminDashboard,
-        path: "/admin"
-    },
-    {
-        Component: StaffDashboard,
-        path: "/staff"
-    },
-    {
-        Component: Login,
-        path: "login"
-    },
-    {
-        Component: Register,
-        path: "register"
-    }
+  {
+    element: <App />,
+    path: "/",
+    children: [
+      {
+        element: <About />,
+        path: "about",
+      },
+      {
+        element: <Fund />,
+        path: "fund",
+      },
+      {
+        element: <Project />,
+        path: "project",
+      },
+      {
+        element: <Contact />,
+        path: "contact",
+      },
+    ],
+  },
+  {
+    element: (
+      <ProtectedRoute allowedRoles={["admin"]}>
+        <AdminDashboard />
+      </ProtectedRoute>
+    ),
+    path: "/admin",
+  },
+  {
+    element: (
+      <ProtectedRoute allowedRoles={["staff"]}>
+        <StaffDashboard />
+      </ProtectedRoute>
+    ),
+    path: "/staff",
+  },
+  {
+    element: <Login />,
+    path: "login",
+  },
+  {
+    element: <Register />,
+    path: "register",
+  },
 ]);
-
