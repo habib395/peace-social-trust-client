@@ -76,7 +76,7 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-center sm:min-h-screen p-4">
       <Card className="w-full sm:max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Register Now</CardTitle>
