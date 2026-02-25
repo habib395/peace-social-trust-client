@@ -24,11 +24,11 @@ const HeroSection = () => {
       <Carousel className="w-full">
         <CarouselContent>
           <CarouselItem>
-            <div className="relative w-full h-auto md:h-[500px] overflow-hidden">
+            <div className="relative w-full h-auto  overflow-hidden">
             <img 
                 src={hero.image} 
                 alt={hero.title} 
-                className="w-full h-full object-cover md:object-fill" 
+                className="w-full h-full object-cover sm:min-h-screen md:object-fill" 
               />
             </div>
           </CarouselItem>
