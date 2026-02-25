@@ -30,8 +30,9 @@ const navigationLinks = [
   {href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/fund", label: "Fund" },
-  { href: "/project", label: "Project" },
+  { href: "/projects", label: "Project" },
   { href: "/contact", label: "Contact" },
+  { href: "/login", label: "sign in"},
 ];
 // Language options
 const languages = [
@@ -42,7 +43,7 @@ const languages = [
 export default function Component() {
   const id = useId();
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/70 backdrop-blur px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4 w-11/12 mx-auto">
         {/* Left side */}
         <div className="flex items-center gap-2">
@@ -100,7 +101,7 @@ export default function Component() {
           </Popover>
           {/* Main nav */}
           <div className="flex items-center gap-6">
-            <Link to="/" className="text-primary hover:text-primary/90">
+            <Link to="/" className="text-primary hover:text-primary/90 hidden sm:block">
               <svg
                 id="logo-15"
                 width="40"
@@ -151,7 +152,8 @@ export default function Component() {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2">
+          
+        <div className="flex items-center gap-3">
           {/* Theme toggle */}
           <ModeToggle/>
           {/* Language selector */}
@@ -174,12 +176,16 @@ export default function Component() {
               ))}
             </SelectContent>
           </Select>
-          <Button asChild className="text-sm" size="sm" variant="ghost">
+
+          <div className="flex items-center gap-2">
+          <Button asChild className="text-sm hidden sm:inline-flex" size="sm" variant="ghost">
             <Link to="login">Sign In</Link>
           </Button>
+
           <Button asChild className="text-sm" size="sm">
             <Link to="/donate">Donate</Link>
           </Button>
+          </div>
         </div>
       </div>
       </div>

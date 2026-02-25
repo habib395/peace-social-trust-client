@@ -3,13 +3,13 @@ import App from "@/App";
 import About from "@/pages/About";
 import Fund from "@/pages/Fund";
 import Login from "@/pages/Login";
-import Project from "@/pages/Project";
 import Register from "@/pages/Registration";
 import AdminDashboard from "@/components/layout/AdminDashboard";
 import StaffDashboard from "@/components/layout/StaffDashboard";
 import Contact from "@/pages/Contact";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "@/components/modules/uiComponents/homeComponents/Home";
+import Projects from "@/components/modules/uiComponents/outerComponents/Projects";
 
 export const router = createBrowserRouter([
   {
@@ -29,8 +29,8 @@ export const router = createBrowserRouter([
         path: "fund",
       },
       {
-        element: <Project />,
-        path: "project",
+        element: <Projects />,
+        path: "projects",
       },
       {
         element: <Contact />,

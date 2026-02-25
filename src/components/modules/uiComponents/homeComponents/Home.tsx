@@ -1,5 +1,5 @@
-import Project from "@/pages/Project";
 import HeroSection from "../heroSection/HeroSection";
+import Projects from "../outerComponents/Projects";
 import Donation from "./Donation";
 import Subscribe from "./Subscribe";
 import Fund from "@/pages/Fund";
@@ -9,7 +9,7 @@ const Home = () => {
         <div className="min-h-screen">
             <HeroSection />
             <Donation />
-            <Project />
+            <Projects />
             <Fund />
             <Subscribe />
         </div>

@@ -1,4 +1,4 @@
-import { useGetHeroQuery } from "@/redux/features/homeSection/hero/heroApiSlice";
+import { useGetHeroQuery } from "@/redux/features/hero/heroApiSlice";
 import Loader from "../../logoutUI/Loader";
 import {
   Carousel,
