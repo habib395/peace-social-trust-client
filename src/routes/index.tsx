@@ -9,12 +9,17 @@ import AdminDashboard from "@/components/layout/AdminDashboard";
 import StaffDashboard from "@/components/layout/StaffDashboard";
 import Contact from "@/pages/Contact";
 import ProtectedRoute from "./ProtectedRoute";
+import Home from "@/components/modules/uiComponents/homeComponents/Home";
 
 export const router = createBrowserRouter([
   {
     element: <App />,
     path: "/",
     children: [
+      {
+        element: <Home />,
+        path: "/"
+      },
       {
         element: <About />,
         path: "about",
