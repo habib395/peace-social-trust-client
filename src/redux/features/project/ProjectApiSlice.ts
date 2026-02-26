@@ -10,7 +10,7 @@ export interface Project {
 
 export interface ProjectsResponse {
   success: boolean;
-  projects: Project[];
+  activities: Project[];
 }
 
 export const projectApi = baseApi.injectEndpoints({
