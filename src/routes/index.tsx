@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router";
 import App from "@/App";
-import About from "@/pages/About";
-import Fund from "@/pages/Fund";
 import Login from "@/pages/Login";
 import Register from "@/pages/Registration";
 import AdminDashboard from "@/components/layout/AdminDashboard";
 import StaffDashboard from "@/components/layout/StaffDashboard";
-import Contact from "@/pages/Contact";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "@/components/modules/uiComponents/homeComponents/Home";
 import Projects from "@/components/modules/uiComponents/outerComponents/Projects";
+import About from "@/components/modules/uiComponents/outerComponents/About";
+import Funds from "@/components/modules/uiComponents/outerComponents/Funds";
+import Contact from "@/components/modules/uiComponents/outerComponents/Contact";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
         path: "about",
       },
       {
-        element: <Fund />,
+        element: <Funds />,
         path: "fund",
       },
       {
